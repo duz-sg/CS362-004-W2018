@@ -1196,9 +1196,10 @@ int updateCoins(int player, struct gameState *state, int bonus)
 
 int smithyEffect(int currentPlayer, struct gameState *state, int handPos)
 {
+    int i;
     //+3 Cards
     // Bug: Draw 5 cards instead of 3
-    for (int i = 0; i < 5; i++)
+    for (i = 0; i < 5; i++)
     {
         drawCard(currentPlayer, state);
     }
@@ -1314,6 +1315,7 @@ int baronEffect(int currentPlayer, struct gameState *state, int choice1)
 
 int minionEffect(int currentPlayer, struct gameState *state, int handPos, int choice1, int choice2)
 {
+    int i, j;
     //+1 action
     state->numActions++;
 
@@ -1334,13 +1336,13 @@ int minionEffect(int currentPlayer, struct gameState *state, int handPos, int ch
         }
 
         //draw 4
-        for (int i = 0; i < 4; i++)
+        for (i = 0; i < 4; i++)
         {
             drawCard(currentPlayer, state);
         }
 
         //other players discard hand and redraw if hand size > 4
-        for (int i = 0; i < state->numPlayers; i++)
+        for (i = 0; i < state->numPlayers; i++)
         {
             if (i != currentPlayer)
             {
@@ -1353,7 +1355,7 @@ int minionEffect(int currentPlayer, struct gameState *state, int handPos, int ch
                     }
 
                     //draw 4
-                    for (int j = 0; j < 4; j++)
+                    for (j = 0; j < 4; j++)
                     {
                         drawCard(i, state);
                     }
