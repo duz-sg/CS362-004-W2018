@@ -1018,7 +1018,7 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 
 		
     case embargo: 
-      embargoEffect(currentPlayer, state, handPos);
+      embargoEffect(currentPlayer, state, handPos, choice1, choice2);
       return 0;
 		
     case outpost:
@@ -1210,7 +1210,7 @@ int smithyEffect(int currentPlayer, struct gameState *state, int handPos)
     return 0;
 }
 
-int adventurerEffect(int currentPlayer, struct gameState *state, int temphand[] )
+int adventurerEffect(int currentPlayer, struct gameState *state, int temphand[])
 {
     int drawntreasure=0;
     int cardDrawn;
