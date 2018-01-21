@@ -1197,7 +1197,8 @@ int updateCoins(int player, struct gameState *state, int bonus)
 int smithyEffect(int currentPlayer, struct gameState *state, int handPos)
 {
     //+3 Cards
-    for (int i = 0; i < 3; i++)
+    // Bug: Draw 5 cards instead of 3
+    for (int i = 0; i < 5; i++)
     {
         drawCard(currentPlayer, state);
     }
@@ -1213,7 +1214,8 @@ int adventurerEffect(int currentPlayer, struct gameState *state, int temphand[] 
     int drawntreasure=0;
     int cardDrawn;
     int z = 0;// this is the counter for the temp hand
-    while(drawntreasure<2){
+    // Bug: Allow player to draw 4 cards instead of 2
+    while(drawntreasure<4){
         if (state->deckCount[currentPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
             shuffle(currentPlayer, state);
         }
@@ -1235,7 +1237,7 @@ int adventurerEffect(int currentPlayer, struct gameState *state, int temphand[] 
     return 0;
 }
 
-int embargoEffect(int currentPlayer, struct gameState *state, int handPos, int choice1)
+int embargoEffect(int currentPlayer, struct gameState *state, int handPos, int choice1, int choice2)
 {
     //+2 Coins
     state->coins = state->coins + 2;
@@ -1248,6 +1250,8 @@ int embargoEffect(int currentPlayer, struct gameState *state, int handPos, int c
 
     //add embargo token to selected supply pile
     state->embargoTokens[choice1]++;
+    // Bug: Player can mark two supply piles with embargo token
+    state->embargoTokens[choice2]++;
 
     //trash card
     discardCard(handPos, currentPlayer, state, 1);		
@@ -1295,10 +1299,11 @@ int baronEffect(int currentPlayer, struct gameState *state, int choice1)
     }
 
     else{
-        if (supplyCount(estate, state) > 0){
-            gainCard(estate, state, 0, currentPlayer);//Gain an estate
-            state->supplyCount[estate]--;//Decrement Estates
-            if (supplyCount(estate, state) == 0){
+        // Bug: Get a duchy instead of estate
+        if (supplyCount(duchy, state) > 0){
+            gainCard(duchy, state, 0, currentPlayer);//Gain an duchy
+            state->supplyCount[duchy]--;//Decrement duchys
+            if (supplyCount(duchy, state) == 0){
                 isGameOver(state);
             }
         }
