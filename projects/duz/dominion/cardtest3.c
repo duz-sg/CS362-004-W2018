@@ -68,7 +68,7 @@ int main() {
 
         if ( r == 0 ) {
             embargoEffect(thisPlayer, &testG, 0, silver, estate);
-        
+
             printf("Test 1: Get 2 coins.\n");
             printf("Before using card there are %d coins.\n", G.coins);
             printf("After using card there are %d coins, exptect %d.\n", testG.coins, G.coins + newCoins);
@@ -90,7 +90,15 @@ int main() {
             printf("After buying card there are %d curses in pile, exptect %d in deck.\n", testG.supplyCount[curse], G.supplyCount[curse]-1);
             testIssues += myAssert(testG.supplyCount[curse], G.supplyCount[curse]-1);
 
-            printf("Test 5: No state change should occur for player.\n");
+            printf("Test 5: Invalid pile won't trigger embargo effect.\n");
+            memcpy(&testG, &G, sizeof(struct gameState)); // copy the game state to test
+            testG.supplyCount[silver] = -1;
+            embargoEffect(thisPlayer, &testG, 0, silver, estate);
+            printf("Before using card on invalid pile there are %d tokens.\n", G.embargoTokens[silver]);
+            printf("After using card on invalid pile there are %d tokens, exptect %d.\n", testG.embargoTokens[silver], G.embargoTokens[silver]);
+            testIssues += myAssert(testG.embargoTokens[silver], G.embargoTokens[silver]);
+
+            printf("Test 6: No state change should occur for player.\n");
             printf("Other player expected %d in deck before and after card effect.\n", G.deckCount[thatPlayer]);
             testIssues += myAssert(testG.deckCount[thatPlayer], G.deckCount[thatPlayer]);
             printf("Other player expected %d in hand before and after card effect.\n", G.handCount[thatPlayer]);
@@ -98,7 +106,7 @@ int main() {
             printf("Other player expected %d in discard before and after card effect.\n", G.discardCount[thatPlayer]);
             testIssues += myAssert(testG.discardCount[thatPlayer], G.discardCount[thatPlayer]);
 
-            printf("Test 6: No state change should occur to the victory card piles and kingdom card piles.\n");
+            printf("Test 7: No state change should occur to the victory card piles and kingdom card piles.\n");
             printf("Estate pile expected %d in deck before and after card effect.\n", G.supplyCount[estate]);
             testIssues += myAssert(testG.supplyCount[estate], G.supplyCount[estate]);
             printf("Duchy pile expected %d in deck before and after card effect.\n", G.supplyCount[duchy]);

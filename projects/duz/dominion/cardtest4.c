@@ -19,7 +19,7 @@
 #define CYN   "\x1B[36m"
 #define WHT   "\x1B[37m"
 #define RESET "\x1B[0m"
-#define TESTCARD "adventurer"
+#define TESTCARD "sea_hag"
 
 // set NOISY_TEST to 0 to remove printfs from output
 
@@ -36,25 +36,11 @@ int myAssert(int left, int right) {
     }
 }
 
-int myAssertGreater(int left, int right) {
-    if ( left > right ) {
-        printf(GRN "TEST PASSED");
-        printf(RESET "\n");
-        return 0;
-    }
-    else {
-        printf(RED "TEST FAILED, expected %d > %d", left, right);
-        printf(RESET "\n");
-        return 1;
-    }
-}
-
-int getTreasureCardCount(int player, struct gameState *state) {
+int getTokenCount(struct gameState *state) {
     int i = 0;
     int count = 0;
-    for (i = 0; i < state->handCount[player]; i++) {
-        //printf("HERE HAS: %d", state->hand[player][i]);
-        if ( state->hand[player][i] == copper || state->hand[player][i] == silver || state->hand[player][i] == gold) {
+    for (i = 0; i <= treasure_map; i++) {
+        if (state->embargoTokens[i]) {
             count++;
         }
     }
@@ -64,14 +50,15 @@ int getTreasureCardCount(int player, struct gameState *state) {
 int main() {
     int seed = 1000;
     int p, r;
+    int handpos = 0, choice1 = 0, choice2 = 0, choice3 = 0, bonus = 0;
+    int cost = 4;
     int k[10] = {adventurer, council_room, feast, gardens, mine
                , remodel, smithy, village, baron, great_hall};
     struct gameState G, testG;
     int thisPlayer = 0;
     int thatPlayer = 1;
     int testIssues = 0;
-    int newCards = 2;
-    int temphand[MAX_HAND];
+    int newDiscard = 1;
 
     printf("----------------- Testing Card: %s ----------------\n", TESTCARD);
     for (p = 0; p <= MAX_PLAYERS; p++) {
@@ -81,28 +68,40 @@ int main() {
         memcpy(&testG, &G, sizeof(struct gameState)); // copy the game state to test
 
         if ( r == 0 ) {
-            adventurerEffect(thisPlayer, &testG, temphand);
-        
-            printf("Test 1: Draw 2 treasure cards.\n");
-            printf("Before using card there are %d treasure cards in hand.\n", getTreasureCardCount(thisPlayer, &G));
-            printf("After using card there are %d cards in hand, exptect %d in hand.\n", getTreasureCardCount(thisPlayer, &testG), getTreasureCardCount(thisPlayer, &G)+newCards);
-            testIssues += myAssert(getTreasureCardCount(thisPlayer, &G)+newCards, getTreasureCardCount(thisPlayer, &testG));
+            cardEffect(sea_hag, choice1, choice2, choice3, &testG, handpos, &bonus);
 
-            printf("Test 2: Discard non treasure cards.\n");
-            printf("Before using card there are %d cards in discard.\n", G.discardCount[thisPlayer]);
-            printf("After using card there are more in discard.\n");
-            // The number of discard cards could be random, cannot be fixed in test
-            testIssues += myAssertGreater(testG.discardCount[thisPlayer], G.discardCount[thisPlayer]);
+            printf("Test 1: It cost 4 coins.\n");
+            printf("This card cost %d coins, exptect %d.\n", getCost(sea_hag), cost);
+            testIssues += myAssert(getCost(sea_hag), cost);
 
-            printf("Test 3: No state change should occur for other players.\n");
-            printf("Other player expected %d in deck before and after card effect.\n", G.deckCount[thatPlayer]);
+            printf("Test 2: Other player discard pile increase.\n");
+            printf("Before using card discard count is %d.\n", G.discardCount[thatPlayer]);
+            printf("After using card discard count is %d, exptect %d.\n", testG.discardCount[thatPlayer], newDiscard);
+            testIssues += myAssert(testG.discardCount[thatPlayer], newDiscard);
+
+            printf("Test 3: Other player deck count remain same.\n");
+            printf("Before using card deck count is %d.\n", G.deckCount[thatPlayer]);
+            printf("After using card deck count is %d, exptect %d.\n", testG.deckCount[thatPlayer], G.deckCount[thatPlayer]);
             testIssues += myAssert(testG.deckCount[thatPlayer], G.deckCount[thatPlayer]);
-            printf("Other player expected %d in hand before and after card effect.\n", G.handCount[thatPlayer]);
-            testIssues += myAssert(testG.handCount[thatPlayer], G.handCount[thatPlayer]);
-            printf("Other player expected %d in discard before and after card effect.\n", G.discardCount[thatPlayer]);
-            testIssues += myAssert(testG.discardCount[thatPlayer], G.discardCount[thatPlayer]);
 
-            printf("Test 4: No state change should occur to the victory card piles and kingdom card piles.\n");
+            printf("Test 4: Other player's new deck top is curse.\n");
+            printf("After using card new deck top is %d, expected %d.\n", testG.deck[thatPlayer][testG.deckCount[thatPlayer]-1], curse);
+            testIssues += myAssert(testG.deck[thatPlayer][testG.deckCount[thatPlayer]-1], curse);
+
+            printf("Test 5: Other player's new discard top is original deck top.\n");
+            printf("Before using card deck top is %d.\n", G.deck[thatPlayer][G.deckCount[thatPlayer]-1]);
+            printf("After using card new discard top is %d, expected %d.\n", testG.discard[thatPlayer][testG.discardCount[thatPlayer]-1], G.deck[thatPlayer][G.deckCount[thatPlayer]-1]);
+            testIssues += myAssert(testG.discard[thatPlayer][testG.discardCount[thatPlayer]-1], G.deck[thatPlayer][G.deckCount[thatPlayer]-1]);
+
+            printf("Test 6: No state change should occur for current player.\n");
+            printf("Other player expected %d in deck before and after card effect.\n", G.deckCount[thisPlayer]);
+            testIssues += myAssert(testG.deckCount[thisPlayer], G.deckCount[thisPlayer]);
+            printf("Other player expected %d in hand before and after card effect.\n", G.handCount[thisPlayer]);
+            testIssues += myAssert(testG.handCount[thisPlayer], G.handCount[thisPlayer]);
+            printf("Other player expected %d in discard before and after card effect.\n", G.discardCount[thisPlayer]);
+            testIssues += myAssert(testG.discardCount[thisPlayer], G.discardCount[thisPlayer]);
+
+            printf("Test 7: No state change should occur to the victory card piles and kingdom card piles.\n");
             printf("Estate pile expected %d in deck before and after card effect.\n", G.supplyCount[estate]);
             testIssues += myAssert(testG.supplyCount[estate], G.supplyCount[estate]);
             printf("Duchy pile expected %d in deck before and after card effect.\n", G.supplyCount[duchy]);
