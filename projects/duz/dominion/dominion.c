@@ -1254,7 +1254,8 @@ int embargoEffect(int currentPlayer, struct gameState *state, int handPos, int c
     //add embargo token to selected supply pile
     state->embargoTokens[choice1]++;
     // Bug: Player can mark two supply piles with embargo token
-    state->embargoTokens[choice2]++;
+    // Fix this bug for RT
+    // state->embargoTokens[choice2]++;
 
     //trash card
     discardCard(handPos, currentPlayer, state, 1);
