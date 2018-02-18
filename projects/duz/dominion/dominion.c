@@ -1199,13 +1199,15 @@ int smithyEffect(int currentPlayer, struct gameState *state, int handPos)
     int i;
     //+3 Cards
     // Bug: Draw 5 cards instead of 3
-    for (i = 0; i < 5; i++)
+    // Fix the bug for RT
+    for (i = 0; i < 3; i++)
     {
         drawCard(currentPlayer, state);
     }
 
     //discard card from hand
-    discardCard(handPos, currentPlayer, state, 0);
+    // According to dominion wiki, there is no discard required, remove this
+    // discardCard(handPos, currentPlayer, state, 0);
 
     return 0;
 }
