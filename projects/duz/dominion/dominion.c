@@ -1218,9 +1218,13 @@ int adventurerEffect(int currentPlayer, struct gameState *state, int temphand[])
     int cardDrawn;
     int z = 0;// this is the counter for the temp hand
     // Bug: Allow player to draw 4 cards instead of 2
-    while(drawntreasure<4){
+    // Bug fix for random test
+    while(drawntreasure<2){
         if (state->deckCount[currentPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
-            shuffle(currentPlayer, state);
+          if (shuffle(currentPlayer, state) == -1) {
+            // Bug fix, if there is no card in deck, and no card in discard to shuffle, exit;
+            return -1;
+          }
         }
         drawCard(currentPlayer, state);
         cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];//top card of hand is most recently drawn card.
@@ -1231,6 +1235,7 @@ int adventurerEffect(int currentPlayer, struct gameState *state, int temphand[])
             state->handCount[currentPlayer]--; //this should just remove the top card (the most recently drawn one).
             z++;
         }
+        // printf("DEBUG handCount: %d, deckCount: %d\n", state->handCount[currentPlayer], state->deckCount[currentPlayer]);
     }
     while(z-1>=0){
         state->discard[currentPlayer][state->discardCount[currentPlayer]++]=temphand[z-1]; // discard all cards in play that have been drawn
