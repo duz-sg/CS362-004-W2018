@@ -1,0 +1,164 @@
+GNU gdb (GDB) Red Hat Enterprise Linux 7.6.1-100.el7
+Copyright (C) 2013 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-redhat-linux-gnu".
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>...
+Reading symbols from /nfs/stak/users/duz/cs362/CS362-004-W2018/projects/duz/fyetDominion/unittest3...done.
+(gdb) break scoreFor
+Breakpoint 1 at 0x402964: file dominion.c, line 420.
+(gdb) run
+Starting program: /nfs/stak/users/duz/cs362/CS362-004-W2018/projects/duz/fyetDominion/unittest3
+----------------- Testing Function: scoreFor ----------------
+Test with 0 players.
+Test skipped because game could not be initialized with 0 players.
+Test with 1 players.
+Test skipped because game could not be initialized with 1 players.
+Test with 2 players.
+Test with player 0.
+Player should have 3 score after game start.
+
+Breakpoint 1, scoreFor (player=0, state=0x7fffffff72d0) at dominion.c:420
+420	  int score = 0;
+(gdb) print player
+$1 = 0
+(gdb) print state->deck[player][0]
+$2 = 1
+(gdb) print estate
+$3 = estate
+(gdb) print state->deckCount[player][0]
+cannot subscript something of type `int'
+(gdb) print state->deckCount[player]
+$4 = 5
+(gdb) print state->deckCount[player]
+$5 = 5
+(gdb) print state->deck[player][0]
+$6 = 1
+(gdb) print state->deck[player][1]
+$7 = 1
+(gdb) print state->deck[player][2]
+$8 = 4
+(gdb) print state->deck[player][3]
+$9 = 4
+(gdb) print state->deck[player][4]
+$10 = 4
+(gdb) p state->deck[player]@5
+$11 = {{1, 1, 4, 4, 4, 4, 4, 1, 4, 4, 387389207 <repeats 490 times>}, {4, 4, 1, 4, 4, 4, 4, 1, 1, 4, 387389207 <repeats 490 times>}, {387389207 <repeats 500 times>}, {387389207 <repeats 500 times>}, {5, 10,
+    387389207 <repeats 498 times>}}
+(gdb) p state->deck[player]@4
+$12 = {{1, 1, 4, 4, 4, 4, 4, 1, 4, 4, 387389207 <repeats 490 times>}, {4, 4, 1, 4, 4, 4, 4, 1, 1, 4, 387389207 <repeats 490 times>}, {387389207 <repeats 500 times>}, {387389207 <repeats 500 times>}}
+(gdb) p *state->deck[player]@4
+$13 = {1, 1, 4, 4}
+(gdb) p *state->deck[player]@5
+$14 = {1, 1, 4, 4, 4}
+(gdb) p (1 == estate)
+$15 = 1
+(gdb) p (2 == estate)
+$16 = 0
+(gdb) p state->handCount[player]
+$17 = 5
+(gdb) p state->discardCount[player]
+$18 = 0
+(gdb) p *state->hand[player]@5
+$19 = {4, 4, 1, 4, 4}
+(gdb) n
+422	  for (i = 0; i < state->handCount[player]; i++)
+(gdb)
+424	      if (state->hand[player][i] == curse) { score = score - 1; };
+(gdb)
+425	      if (state->hand[player][i] == estate) { score = score + 1; };
+(gdb)
+426	      if (state->hand[player][i] == duchy) { score = score + 3; };
+(gdb)
+427	      if (state->hand[player][i] == province) { score = score + 6; };
+(gdb)
+428	      if (state->hand[player][i] == great_hall) { score = score + 1; };
+(gdb)
+429	      if (state->hand[player][i] == gardens) { score = score + ( fullDeckCount(player, 0, state) / 10 ); };
+(gdb)
+422	  for (i = 0; i < state->handCount[player]; i++)
+(gdb)
+424	      if (state->hand[player][i] == curse) { score = score - 1; };
+(gdb)
+425	      if (state->hand[player][i] == estate) { score = score + 1; };
+(gdb)
+426	      if (state->hand[player][i] == duchy) { score = score + 3; };
+(gdb)
+427	      if (state->hand[player][i] == province) { score = score + 6; };
+(gdb)
+428	      if (state->hand[player][i] == great_hall) { score = score + 1; };
+(gdb)
+429	      if (state->hand[player][i] == gardens) { score = score + ( fullDeckCount(player, 0, state) / 10 ); };
+(gdb)
+422	  for (i = 0; i < state->handCount[player]; i++)
+(gdb) p score
+$20 = 0
+(gdb) watch score
+Hardware watchpoint 2: score
+(gdb)
+Hardware watchpoint 3: score
+(gdb) n
+424	      if (state->hand[player][i] == curse) { score = score - 1; };
+(gdb)
+425	      if (state->hand[player][i] == estate) { score = score + 1; };
+(gdb)
+Hardware watchpoint 2: score
+
+Old value = 0
+New value = 1
+Hardware watchpoint 3: score
+
+Old value = 0
+New value = 1
+0x00000000004029f0 in scoreFor (player=0, state=0x7fffffff72d0) at dominion.c:425
+425	      if (state->hand[player][i] == estate) { score = score + 1; };
+(gdb) delete 3
+(gdb) n
+426	      if (state->hand[player][i] == duchy) { score = score + 3; };
+(gdb) n
+427	      if (state->hand[player][i] == province) { score = score + 6; };
+(gdb)
+428	      if (state->hand[player][i] == great_hall) { score = score + 1; };
+(gdb)
+429	      if (state->hand[player][i] == gardens) { score = score + ( fullDeckCount(player, 0, state) / 10 ); };
+(gdb)
+422	  for (i = 0; i < state->handCount[player]; i++)
+(gdb)
+424	      if (state->hand[player][i] == curse) { score = score - 1; };
+(gdb)
+425	      if (state->hand[player][i] == estate) { score = score + 1; };
+(gdb)
+426	      if (state->hand[player][i] == duchy) { score = score + 3; };
+(gdb)
+427	      if (state->hand[player][i] == province) { score = score + 6; };
+(gdb)
+428	      if (state->hand[player][i] == great_hall) { score = score + 1; };
+(gdb)
+429	      if (state->hand[player][i] == gardens) { score = score + ( fullDeckCount(player, 0, state) / 10 ); };
+(gdb)
+422	  for (i = 0; i < state->handCount[player]; i++)
+(gdb)
+424	      if (state->hand[player][i] == curse) { score = score - 1; };
+(gdb)
+425	      if (state->hand[player][i] == estate) { score = score + 1; };
+(gdb)
+426	      if (state->hand[player][i] == duchy) { score = score + 3; };
+(gdb)
+427	      if (state->hand[player][i] == province) { score = score + 6; };
+(gdb)
+428	      if (state->hand[player][i] == great_hall) { score = score + 1; };
+(gdb)
+429	      if (state->hand[player][i] == gardens) { score = score + ( fullDeckCount(player, 0, state) / 10 ); };
+(gdb)
+422	  for (i = 0; i < state->handCount[player]; i++)
+(gdb)
+433	  for (i = 0; i < state->discardCount[player]; i++)
+(gdb)
+444	  for (i = 0; i < state->discardCount[player]; i++)
+(gdb)
+454	  return score;
+(gdb) p score
+$22 = 1
