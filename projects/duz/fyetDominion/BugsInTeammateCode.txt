@@ -1,0 +1,29 @@
+Bugs  In  Teammate  Code
+
+ID: Dominion-1:
+This bug can be captured by the randomtestcard1.c, which is used to test the smithy card effect.
+This bug is from function smithyEffect(), and the root cause of this bug is this function calls discardCard() more than once.
+This bug caused randomtestcard1 to crash. To reproduce this bug, run
+	make randomtestcard1.out
+It shall compile the executable successfully, and encounter ‘Segmentation fault’ when running the executable. This will always trigger the bug.
+An alternative is to set the playedCardCount to MAX_DECK after the game start, and run smithyEffect(), it will trigger the program to crash.
+The code is in version: https://github.com/fyet/CS362-004-W2018/blob/fyet-assignment-4/projects/fyet/dominion/dominion.c
+Severity: Critical. This bug could cause the dominion to crash in certain scenarios.
+Priority: Very High. This bug could totally stop the dominion program from running.
+This bug is not easy to identify, because the program directly goes to ‘Segmentation fault’, so I have to print additional log information, in order to narrow down the bug. The log can be found in attached ‘smithyEffect.log’ file.
+
+ID: Dominion-2:
+This bug can be captured by unittest1.c, which is used to test the function isGameOver().
+The root cause of this bug is the range of the for loop in isGameOver() function:
+	for (i = 0; i < 25; i++)
+This range only covers card piles from 0 to 24, however, it should cover the card piles from 0 to 26.
+This bug locates inside function isGameOver(), to reproduce this bug, run
+	make unittests
+It will compile the executables and run for the unit tests, open the unit test result ‘unittestresult.out’, it will show multiple:
+	isGameOver() return expected 1 when three piles are 			empty, edge case 2.
+	TEST FAILED, expected 0 to be 1
+Another alternative is to set supplyCount of sea_hag or treasure_map to 0, will also trigger this bug, because when isGameOver() function count 3 card piles to empty, it should count supplyCount for all the card piles, however, it does not count for sea_hag pile or treasure_map pile.
+The code is in version: https://github.com/fyet/CS362-004-W2018/blob/fyet-assignment-4/projects/fyet/dominion/dominion.c
+Severity: High. This bug could cause the dominion program unable to finish in certain scenarios.
+Priority: High. This bug could cause the program to run against the dominion game rule.
+This bug is relatively easy to identify, because this bug could be exposed by the boundary test inside the unit test. Also, this bug exists in the original dominion code, it’s not introduced by my teammate, thus, it can be identified using my unit test code.
