@@ -1275,16 +1275,14 @@ public class UrlValidatorRandomTest extends TestCase {
          int pass = 0;
          int fail = 0;
          
-		 for ( int j = 0; j < 500; j++ ) {
+		 for ( int j = 0; j < 500000; j++ ) {
 			 String url = randomUrl();
-			 System.out.printf("TESTING: %s", url);
-			 System.out.println();
 //			 boolean result = urlValidator.isValid("http://www.google.com");
 			 boolean result = urlValidator.isValid(url);
 			 if (result) {
 				 pass++;
-				 System.out.printf("pass: %s: ", url);
-				 System.out.println();
+//				 System.out.printf("pass: %s", url);
+//				 System.out.println();
 			 } else {
 				 fail++;
 				 System.out.printf("fail: %s", url);
@@ -1301,11 +1299,11 @@ public class UrlValidatorRandomTest extends TestCase {
 	public String randomUrl() {
 		return randomScheme()
 				+ "://"
-				+ randomHost();
-//				+ ":"
-//				+ randomPort()
-//				+ randomPath()
-//				+ randomQuery();
+				+ randomHost()
+				+ ":"
+				+ randomPort()
+				+ randomPath()
+				+ randomQuery();
 	}
 	
 	public String randomScheme() {
@@ -1313,8 +1311,8 @@ public class UrlValidatorRandomTest extends TestCase {
 	}
 	
 	public String randomHost() {
-		return randomString(rand.nextInt(100)) 
-				+ "." + randomString(rand.nextInt(100)) 
+		return randomString(rand.nextInt(64)) 
+				+ "." + randomString(rand.nextInt(64)) 
 				+ "." + tld[rand.nextInt(tld.length)];
 	}
 	
@@ -1370,7 +1368,6 @@ public class UrlValidatorRandomTest extends TestCase {
        String[] schemes = {"http","https"};
        UrlValidator urlValidator = new UrlValidator(schemes, UrlValidator.NO_FRAGMENTS);
        urlValidator.isValid("http://www.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.logoworks.comwww.log");
-       System.out.println("LOL");
    }
 
 }
